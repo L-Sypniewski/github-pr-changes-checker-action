@@ -13,8 +13,8 @@ jobs:
     name: Check PR changes
     runs-on: ubuntu-latest
     steps:
-      - name: .NET code metrics
-        id: dotnet-code-metrics
+      - name: Check PR changes step
+        id: check-pr-changes-step
         uses: L-Sypniewski/github-pr-changes-checker-action@master
         with:
           owner: ${{ github.event.inputs.owner }}

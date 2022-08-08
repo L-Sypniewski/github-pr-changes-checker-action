@@ -23,4 +23,4 @@ LABEL com.github.actions.color="orange"
 # Relayer the .NET SDK, anew with the build output
 FROM mcr.microsoft.com/dotnet/runtime:6.0
 COPY --from=build-env /app/out .
-ENTRYPOINT [ "dotnet", "/github-pr-changes-checker-action" ]
+ENTRYPOINT [ "dotnet", "/github-pr-changes-checker-action.dll" ]

@@ -16,10 +16,6 @@ inputs:
     description:
       'The PR number, for example: \"123\". Assign from `github.event.pull_request.number`.'
     required: true
-  github_token:
-    description:
-      'Github token. Assign from `secrets.GITHUB_TOKEN`.'
-    required: true
 outputs:
   updated-projects:
     description:
@@ -34,5 +30,3 @@ runs:
   - ${{ inputs.name }}
   - '-p'
   - ${{ inputs.pr_number }}
-  - '-t
-  - ${{ inputs.github_token }}

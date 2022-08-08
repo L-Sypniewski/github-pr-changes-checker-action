@@ -1,0 +1,8 @@
+{
+    "action": "workflow_dispatch",
+    "inputs": {
+        "owner": "L-Sypniewski",
+        "name": "Sypniewski-Core-Library",
+        "pr_number": "120"
+    }
+}

@@ -10,12 +10,13 @@ on:
         required: true
 jobs:
   check-pr-changes:
-  runs-on: ubuntu-latest
-  steps:
-    - name: .NET code metrics
-      id: dotnet-code-metrics
-      uses: L-Sypniewski/github-pr-changes-checker-action/.github/workflows/check-pr-changes.yml@master
-      with:
-        owner: ${{ github.event.inputs.owner }}
-        name: ${{ github.event.inputs.name }}
-        pr_number: ${{ github.event.inputs.pr_number }}
+    name: Check PR changes
+    runs-on: ubuntu-latest
+    steps:
+      - name: .NET code metrics
+        id: dotnet-code-metrics
+        uses: L-Sypniewski/github-pr-changes-checker-action/.github/workflows/check-pr-changes.yml@master
+        with:
+          owner: ${{ github.event.inputs.owner }}
+          name: ${{ github.event.inputs.name }}
+          pr_number: ${{ github.event.inputs.pr_number }}

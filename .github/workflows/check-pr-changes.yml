@@ -22,4 +22,4 @@ jobs:
           pr_number: ${{ github.event.inputs.pr_number }}
       - name: Print output
         run: |
-            echo ${{ steps.check-pr-changes-step.outputs.updated-projects }} 
+            echo '${{ steps.check-pr-changes-step.outputs.updated-projects }}'

@@ -1,32 +1,28 @@
-name: 'Github PR Changes Checker'
-description: 'Checks which projects have been modified in a PR'
+name: "Github PR Changes Checker"
+description: "Checks which projects have been modified in a PR"
 branding:
   icon: activity
   color: orange
 inputs:
   owner:
-    description:
-      'The owner of the repo. Assign from github.repository_owner. Example, "dotnet".'
+    description: 'The owner of the repo. Assign from github.repository_owner. Example, "dotnet".'
     required: true
   name:
-    description:
-      'The repository name. Example, "samples".'
+    description: 'The repository name. Example, "samples".'
     required: true
   pr_number:
-    description:
-      'The PR number, for example: \"123\". Assign from `github.event.pull_request.number`.'
+    description: 'The PR number, for example: \"123\". Assign from `github.event.pull_request.number`.'
     required: true
 outputs:
   updated-projects:
-    description:
-      'Names of updated projects'
+    description: "Names of updated projects"
 runs:
-  using: 'docker'
-  image: 'Dockerfile'
+  using: "docker"
+  image: "dockerfile"
   args:
-  - '-o'
-  - ${{ inputs.owner }}
-  - '-n'
-  - ${{ inputs.name }}
-  - '-p'
-  - ${{ inputs.pr_number }}
+    - "-o"
+    - ${{ inputs.owner }}
+    - "-n"
+    - ${{ inputs.name }}
+    - "-p"
+    - ${{ inputs.pr_number }}

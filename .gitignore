@@ -398,3 +398,4 @@ FodyWeavers.xsd
 *.sln.iml
 
 .act/secrets.env
+docker-compose.debug.yml

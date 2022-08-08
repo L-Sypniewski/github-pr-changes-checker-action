@@ -15,7 +15,7 @@ jobs:
     steps:
       - name: .NET code metrics
         id: dotnet-code-metrics
-        uses: L-Sypniewski/github-pr-changes-checker-action/.github/workflows/check-pr-changes.yml@master
+        uses: L-Sypniewski/github-pr-changes-checker-action@master
         with:
           owner: ${{ github.event.inputs.owner }}
           name: ${{ github.event.inputs.name }}

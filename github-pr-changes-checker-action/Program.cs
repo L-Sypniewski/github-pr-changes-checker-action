@@ -33,7 +33,7 @@ static async Task StartAnalysisAsync(ActionInputs inputs, IHost host)
 {
     var updatedProjects = new[] { "raz", "dwa" };
 
-    Console.WriteLine($"::set-output name=updated-projects::{updatedProjects}");
+    Console.WriteLine($"::set-output name=updated-projects::{string.Join('\n', updatedProjects)}");
 
     await Task.CompletedTask;
 

@@ -1,39 +1,51 @@
 {
-	"version": "2.0.0",
-	"tasks": [
-		{
-			"label": "act - check-pr-changes",
-			"command": "act",
-			"options": {
-				"cwd": "${workspaceFolder}"
-			},
-			"args": [
-				"--job",
-				"check-pr-changes",
-				"--eventpath",
-				".act/check-pr-changes.json",
-				"--env-file",
-				".act/.env",
-				"--secret-file",
-				".act/secrets.env",
-			],
-			"type": "shell",
-		},
-		{
-			"label": "docker-compose up",
-			"command": "docker-compose",
-			"options": {
-				"cwd": "${workspaceFolder}"
-			},
-			"args": [
-				"-f",
-				"docker-compose.debug.yml",
-				"-f",
-				"docker-compose.yml",
-				"up",
-				"--build",
-			],
-			"type": "shell",
-		}
-	]
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "act - check-pr-changes",
+            "command": "act",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "args": [
+                "--job",
+                "check-pr-changes",
+                "--eventpath",
+                ".act/check-pr-changes.json",
+                "--env-file",
+                ".act/.env",
+                "--secret-file",
+                ".act/secrets.env",
+            ],
+            "type": "shell",
+        },
+        {
+            "label": "docker-compose up",
+            "command": "docker-compose",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "args": [
+                "-f",
+                "docker-compose.debug.yml",
+                "-f",
+                "docker-compose.yml",
+                "up",
+                "--build",
+            ],
+            "type": "shell",
+        },
+        {
+            "label": "build",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "${workspaceFolder}/github-pr-changes-checker-action/github-pr-changes-checker-action.csproj",
+                "/property:GenerateFullPaths=true",
+                "/consoleloggerparameters:NoSummary"
+            ],
+            "problemMatcher": "$msCompile"
+        }
+    ]
 }

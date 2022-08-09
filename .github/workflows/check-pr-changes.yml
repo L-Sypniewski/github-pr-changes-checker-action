@@ -15,7 +15,7 @@ jobs:
     steps:
       - name: Check PR changes step
         id: check-pr-changes-step
-        uses: L-Sypniewski/github-pr-changes-checker-action@master
+        uses: L-Sypniewski/github-pr-changes-checker-action@github-token
         with:
           owner: ${{ github.event.inputs.owner }}
           name: ${{ github.event.inputs.name }}

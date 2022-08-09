@@ -6,7 +6,7 @@ WORKDIR /app
 COPY . ./
 
 ARG BUILD_CONFIG=Release
-RUN dotnet publish ./github-pr-changes-checker-action/github-pr-changes-checker-action.csproj -c ${BUILD_CONFIG} -o out --no-self-contained
+RUN dotnet publish ./github-pr-changes-checker-action/src/github-pr-changes-checker-action.csproj -c ${BUILD_CONFIG} -o out --no-self-contained
 
 # Label the container
 LABEL maintainer="Łukasz Sypniewski <l.sypniewski@gmail.com>"

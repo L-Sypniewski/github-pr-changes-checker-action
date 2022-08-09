@@ -6,9 +6,6 @@
             "type": "docker",
             "request": "attach",
             "platform": "netCore",
-            // "netCore": {
-            //     "debuggerPath": "/remote_debugger/vsdbg"
-            // },
             "sourceFileMap": {
                 "/app": "${workspaceFolder}"
             }

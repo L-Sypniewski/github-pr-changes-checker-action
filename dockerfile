@@ -4,7 +4,9 @@ FROM mcr.microsoft.com/dotnet/sdk:6.0 as build-env
 # Copy everything and publish the release (publish implicitly restores and builds)
 WORKDIR /app
 COPY . ./
-RUN dotnet publish ./github-pr-changes-checker-action/github-pr-changes-checker-action.csproj -c Release -o out --no-self-contained
+
+ARG BUILD_CONFIG=Release
+RUN dotnet publish ./github-pr-changes-checker-action/github-pr-changes-checker-action.csproj -c ${BUILD_CONFIG} -o out --no-self-contained
 
 # Label the container
 LABEL maintainer="Łukasz Sypniewski <l.sypniewski@gmail.com>"

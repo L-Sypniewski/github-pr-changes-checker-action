@@ -15,8 +15,7 @@ using IHost host = Host.CreateDefaultBuilder(args)
         httpClient.DefaultRequestHeaders.Add("Accept", "application/vnd.github.v3+json");
         httpClient.DefaultRequestHeaders.Add("User-Agent", "product/1");
     });
-})
-    .Build();
+}).Build();
 
 static TService Get<TService>(IHost host)
     where TService : notnull =>
@@ -27,11 +26,8 @@ parser.WithNotParsed(
     errors =>
     {
         Get<ILoggerFactory>(host)
-            .CreateLogger("DotNet.GitHubAction.Program")
-            .LogError(
-                string.Join(
-                    Environment.NewLine, errors.Select(error => error.ToString())));
-
+            .CreateLogger("GithubPrChangesChecker.Program")
+            .LogError("Error: {Error}", string.Join(Environment.NewLine, errors.Select(error => error.ToString())));
         Environment.Exit(2);
     });
 
@@ -45,7 +41,7 @@ static async Task StartAnalysisAsync(ActionInputs inputs, IHost host)
     var client = Get<GithubClient>(host);
     var response = await client.GetResponse(inputs.Owner, inputs.Name, inputs.PrNumber, inputs.GithubToken);
 
-    var updatedProjects = new[] { "raz", inputs.GithubToken[..4], "dwa" };
+    var updatedProjects = response.Select(x => x.Filename.Split('/').First()).Distinct().ToArray();
 
     Console.WriteLine($"::set-output name=updated-projects::{string.Join(';', updatedProjects)}");
 

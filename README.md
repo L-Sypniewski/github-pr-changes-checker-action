@@ -5,7 +5,7 @@
 
 ### docker-compose.debug.yml
 ```yaml
-version: '3.4'
+version: '3.8'
 
 services:
   githubprchangescheckeraction:
@@ -14,6 +14,8 @@ services:
       - "-n My-Repo"
       - "-o L-Sypniewski"
       - "-t ghp_MY_GITHUB_TOKEN"
+    volumes:
+      - ~/.vsdbg:/remote_debugger:rw
 
 ```
 

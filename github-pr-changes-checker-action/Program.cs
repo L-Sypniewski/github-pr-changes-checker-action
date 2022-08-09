@@ -6,7 +6,6 @@ using Microsoft.Extensions.Logging;
 using static CommandLine.Parser;
 
 using IHost host = Host.CreateDefaultBuilder(args)
-    // .ConfigureServices((_, services) => services.AddGitHubActionServices())
     .Build();
 
 static TService Get<TService>(IHost host)
@@ -31,6 +30,8 @@ await host.RunAsync();
 
 static async Task StartAnalysisAsync(ActionInputs inputs, IHost host)
 {
+    host.WaitForDebuggerToBeAttached("Development", onCheck: () => System.Console.WriteLine("WaitForDebugger"));
+
     var updatedProjects = new[] { "raz", inputs.GithubToken[..4], "dwa" };
 
     Console.WriteLine($"::set-output name=updated-projects::{string.Join(';', updatedProjects)}");

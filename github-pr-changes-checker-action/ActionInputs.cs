@@ -23,8 +23,13 @@ public class ActionInputs
     [Option('p', "pr_number",
         Required = true,
         HelpText = "The PR number, for example: \"123\". Assign from `github.event.pull_request.number`.")]
-    public string PrNumber { get; set; }
-    
+    public string PrNumber { get; set; } = default!;
+
+    [Option('t', "github_token",
+        Required = true,
+        HelpText = "Github token. Assign from `secrets.GITHUB_TOKEN`.")]
+    public string GithubToken { get; set; } = default!;
+
     static void ParseAndAssign(string? value, Action<string> assign)
     {
         if (value is { Length: > 0 } && assign is not null)

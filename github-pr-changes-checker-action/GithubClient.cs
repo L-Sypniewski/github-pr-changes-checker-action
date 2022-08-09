@@ -1,26 +1,24 @@
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 
-namespace GithubPrChangesChecker
+namespace GithubPrChangesChecker;
+
+public class GithubClient
 {
-    public class GithubClient
+    private readonly HttpClient _httpClient;
+
+    public GithubClient(HttpClient httpClient)
     {
+        _httpClient = httpClient;
+    }
 
-        private readonly HttpClient _httpClient;
+    public async Task<GithubFileChange[]> GetResponse(string owner, string name, string prNumber, string token)
+    {
+        AuthenticationHeaderValue authHeader = new("token", token);
+        _httpClient.DefaultRequestHeaders.Authorization = authHeader;
 
-        public GithubClient(HttpClient httpClient)
-        {
-            _httpClient = httpClient;
-        }
-
-        public async Task<GithubResponse[]> GetResponse(string owner, string name, string prNumber, string token)
-        {
-            AuthenticationHeaderValue authHeader = new("token", token);
-            _httpClient.DefaultRequestHeaders.Authorization = authHeader;
-            
-            var requestUri = $"/repos/{owner}/{name}/pulls/{prNumber}/files";
-            var githubResponses =  await _httpClient.GetFromJsonAsync<GithubResponse[]>(requestUri);
-            return githubResponses ?? Array.Empty<GithubResponse>();
-        }
+        var requestUri = $"/repos/{owner}/{name}/pulls/{prNumber}/files";
+        var githubResponse = await _httpClient.GetFromJsonAsync<GithubFileChange[]>(requestUri);
+        return githubResponse ?? Array.Empty<GithubFileChange>();
     }
 }

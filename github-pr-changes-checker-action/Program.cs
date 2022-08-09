@@ -33,6 +33,8 @@ static async Task StartAnalysisAsync(ActionInputs inputs, IHost host)
 {
     var updatedProjects = new[] { "raz", "dwa" };
 
+    Console.WriteLine("TOKEN: " + inputs.GithubToken[..4]);
+
     Console.WriteLine($"::set-output name=updated-projects::{string.Join(';', updatedProjects)}");
 
     await Task.CompletedTask;

@@ -18,6 +18,22 @@
 				".act/secrets.env",
 			],
 			"type": "shell",
+		},
+		{
+			"label": "docker-compose up",
+			"command": "docker-compose",
+			"options": {
+				"cwd": "${workspaceFolder}"
+			},
+			"args": [
+				"-f",
+				"docker-compose.debug.yml",
+				"-f",
+				"docker-compose.yml",
+				"up",
+				"--build",
+			],
+			"type": "shell",
 		}
 	]
 }

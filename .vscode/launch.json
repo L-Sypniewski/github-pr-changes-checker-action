@@ -19,9 +19,9 @@
             "request": "launch",
             "preLaunchTask": "build",
             // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/github-pr-changes-checker-action/bin/Debug/net6.0/github-pr-changes-checker-action.dll",
+            "program": "${workspaceFolder}/GithubPrChangesCheckerAction/bin/Debug/net6.0/GithubPrChangesCheckerAction.dll",
             "args": [],
-            "cwd": "${workspaceFolder}/github-pr-changes-checker-action",
+            "cwd": "${workspaceFolder}/GithubPrChangesCheckerAction",
             // For more information about the 'console' field, see https://aka.ms/VSCode-CS-LaunchJson-Console
             "console": "internalConsole",
             "stopAtEntry": false

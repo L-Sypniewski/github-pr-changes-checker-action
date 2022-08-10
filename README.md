@@ -1,11 +1,11 @@
-# github-pr-changes-checker-action
+# GithubPrChangesCheckerAction
 
 ## Examples of files with secrets
 
-
 ### docker-compose.debug.yml
+
 ```yaml
-version: '3.8'
+version: "3.8"
 
 services:
   githubprchangescheckeraction:
@@ -15,7 +15,7 @@ services:
     entrypoint: # We have to use entrypoint instead of `command` so that Rider debugging works: https://stackoverflow.com/questions/72588085/rider-debug-docker-compose-does-not-recognize-cli-options/73292166#73292166
       [
         "dotnet",
-        "/github-pr-changes-checker-action.dll",
+        "/GithubPrChangesCheckerAction.dll",
         "-o",
         "L-Sypniewski",
         "-n",
@@ -30,7 +30,7 @@ services:
 ```
 
 ### secrets.env
+
 ```yaml
 GITHUB_TOKEN=ghp_MY_GITHUB_TOKEN
 ```
-

@@ -6,4 +6,4 @@ services:
       context: .
       dockerfile: ./dockerfile
     environment:
-       - DOTNET_ENVIRONMENT=Development
+      - DOTNET_ENVIRONMENT=Development

@@ -22,7 +22,7 @@ jobs:
           owner: ${{ github.event.inputs.owner }}
           name: ${{ github.event.inputs.name }}
           pr_number: ${{ github.event.inputs.pr_number }}
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          github_token: ${{ secrets.PAT }}
       - name: Print output
         run: |
           echo '${{ steps.check-pr-changes-step.outputs.updated-projects }}'

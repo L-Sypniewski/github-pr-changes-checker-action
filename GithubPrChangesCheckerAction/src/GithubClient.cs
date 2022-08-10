@@ -34,17 +34,7 @@ public class GithubClient
         {
             var uriWithParams = $"{requestUri}?per_page=100&page={pageNo}";
 
-            GithubFileChange[]? pageResults;
-            try
-            {
-                pageResults = await httpClient.GetFromJsonAsync<GithubFileChange[]>(uriWithParams);
-            }
-            catch (HttpRequestException exception) when (exception.StatusCode != HttpStatusCode.OK)
-            {
-                Console.WriteLine("HTTP STATUS CODE " + exception.StatusCode);
-                
-                return Array.Empty<GithubFileChange>();
-            }
+            var pageResults = await httpClient.GetFromJsonAsync<GithubFileChange[]>(uriWithParams);
 
             if (pageResults is null || pageResults.Length == 0)
             {

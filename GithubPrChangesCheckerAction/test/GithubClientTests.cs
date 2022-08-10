@@ -133,7 +133,7 @@ public class GithubClientTests
     }
 
     [Fact]
-    public async Task GetResponse_ReturnsNoProjectNames_WhenResponseIsNotFound()
+    public async Task GetResponse_Throws_WhenResponseIsNotFound()
     {
         _messageHandlerMock.Protected()
                            .SetupSequence<Task<HttpResponseMessage>>(
@@ -146,8 +146,8 @@ public class GithubClientTests
                                StatusCode = HttpStatusCode.NotFound
                            });
 
-        var results = await _sut.GetChangedProjectsNames(default!, default!, default!, default!);
-        results.Should().BeEmpty();
+        Func<Task> act = async () => await _sut.GetChangedProjectsNames(default!, default!, default!, default!);
+        await act.Should().ThrowAsync<Exception>();
     }
 
     private static string GenerateTestData(params string[] filenames)

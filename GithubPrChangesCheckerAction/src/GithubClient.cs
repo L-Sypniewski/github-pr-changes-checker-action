@@ -48,7 +48,7 @@ public class GithubClient
             {
                 break;
             }
-            githubResponse.AddRange(pageResults ?? Array.Empty<GithubFileChange>());
+            githubResponse.AddRange(pageResults);
             pageNo++;
         }
 

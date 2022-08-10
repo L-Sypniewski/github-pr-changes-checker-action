@@ -4,33 +4,29 @@ namespace GithubPrChangesChecker;
 
 public class ActionInputs
 {
-    string _repositoryName = null!;
+    private string _repositoryName = null!;
 
     [Option('o', "owner",
-        Required = true,
-        HelpText = "The owner, for example: \"dotnet\". Assign from `github.repository_owner`.")]
+            Required = true,
+            HelpText = "The owner, for example: \"dotnet\". Assign from `github.repository_owner`.")]
     public string Owner { get; set; } = null!;
 
     [Option('n', "name",
-        Required = true,
-        HelpText = "The repository name, for example: \"samples\". Assign from `github.repository`.")]
-    public string Name
-    {
-        get => _repositoryName;
-        set => ParseAndAssign(value, str => _repositoryName = str);
-    }
+            Required = true,
+            HelpText = "The repository name, for example: \"samples\". Assign from `github.repository`.")]
+    public string Name { get => _repositoryName; set => ParseAndAssign(value, str => _repositoryName = str); }
 
     [Option('p', "pr_number",
-        Required = true,
-        HelpText = "The PR number, for example: \"123\". Assign from `github.event.pull_request.number`.")]
+            Required = true,
+            HelpText = "The PR number, for example: \"123\". Assign from `github.event.pull_request.number`.")]
     public string PrNumber { get; set; } = default!;
 
     [Option('t', "github_token",
-        Required = true,
-        HelpText = "Github token. Assign from `secrets.GITHUB_TOKEN`.")]
+            Required = true,
+            HelpText = "Github token. Assign from `secrets.GITHUB_TOKEN`.")]
     public string GithubToken { get; set; } = default!;
 
-    static void ParseAndAssign(string? value, Action<string> assign)
+    private static void ParseAndAssign(string? value, Action<string> assign)
     {
         if (value is { Length: > 0 } && assign is not null)
         {

@@ -41,6 +41,8 @@ public class GithubClient
             }
             catch (HttpRequestException exception) when (exception.StatusCode != HttpStatusCode.OK)
             {
+                Console.WriteLine("HTTP STATUS CODE " + exception.StatusCode);
+                
                 return Array.Empty<GithubFileChange>();
             }
 

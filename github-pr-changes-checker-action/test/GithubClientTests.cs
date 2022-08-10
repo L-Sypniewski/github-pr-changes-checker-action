@@ -136,20 +136,22 @@ public class GithubClientTests
              });
     }
 
-    private static string GenerateTestData(int n)
+    [Fact]
+    public async Task GetResponse_ReturnsNoProjectNames_WhenResponseIsNotFound()
     {
-        var stringBuilder = new StringBuilder("[");
-        for (var i = 0; i < n; i++)
+        _messageHandlerMock.Protected()
+       .SetupSequence<Task<HttpResponseMessage>>(
+        "SendAsync",
+        ItExpr.IsAny<HttpRequestMessage>(),
+        ItExpr.IsAny<CancellationToken>()
+        )
+        .ReturnsAsync(new HttpResponseMessage()
         {
-            stringBuilder.Append($"{{\"FileName\": \"project_{i}/subfolder1/subfolder2\"}}");
-            if (i != n - 1)
-            {
-                stringBuilder.Append(',');
-            }
-        }
-        stringBuilder.Append(']');
-        return stringBuilder.ToString();
+            StatusCode = HttpStatusCode.NotFound
+        });
 
+        var results = await _sut.GetChangedProjectsNames(default!, default!, default!, default!);
+        results.Should().BeEmpty();
     }
 
     private static string GenerateTestData(params string[] filenames)

@@ -6,12 +6,12 @@ WORKDIR /app
 COPY . ./
 
 ARG BUILD_CONFIG=Release
-RUN dotnet publish ./github-pr-changes-checker-action/src/github-pr-changes-checker-action.csproj -c ${BUILD_CONFIG} -o out --no-self-contained
+RUN dotnet publish ./GithubPrChangesCheckerAction/src/GithubPrChangesCheckerAction.csproj -c ${BUILD_CONFIG} -o out --no-self-contained
 
 # Label the container
 LABEL maintainer="Łukasz Sypniewski <l.sypniewski@gmail.com>"
-LABEL repository="https://github.com/L-Sypniewski/github-pr-changes-checker-action"
-LABEL homepage="https://github.com/L-Sypniewski/github-pr-changes-checker-action"
+LABEL repository="https://github.com/L-Sypniewski/GithubPrChangesCheckerAction"
+LABEL homepage="https://github.com/L-Sypniewski/GithubPrChangesCheckerAction"
 
 # Label as GitHub action
 LABEL com.github.actions.name="Github PR Changes Checker"
@@ -25,4 +25,4 @@ LABEL com.github.actions.color="orange"
 # Relayer the .NET SDK, anew with the build output
 FROM mcr.microsoft.com/dotnet/runtime:6.0
 COPY --from=build-env /app/out .
-ENTRYPOINT [ "dotnet", "/github-pr-changes-checker-action.dll" ]
+ENTRYPOINT [ "dotnet", "/GithubPrChangesCheckerAction.dll" ]

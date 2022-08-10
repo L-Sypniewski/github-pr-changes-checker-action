@@ -41,7 +41,7 @@
             "type": "process",
             "args": [
                 "build",
-                "${workspaceFolder}/github-pr-changes-checker-action/github-pr-changes-checker-action.csproj",
+                "${workspaceFolder}/GithubPrChangesCheckerAction/GithubPrChangesCheckerAction.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],

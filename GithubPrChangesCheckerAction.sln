@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30114.105
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "github-pr-changes-checker-action", "github-pr-changes-checker-action", "{2B7A56A8-FE78-4062-AD32-72AA1E46389F}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GithubPrChangesCheckerAction", "GithubPrChangesCheckerAction", "{2B7A56A8-FE78-4062-AD32-72AA1E46389F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "github-pr-changes-checker-action", "github-pr-changes-checker-action\src\github-pr-changes-checker-action.csproj", "{0032DD0E-FA4D-4405-8052-8B5692D5AD90}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GithubPrChangesCheckerAction", "GithubPrChangesCheckerAction\src\GithubPrChangesCheckerAction.csproj", "{0032DD0E-FA4D-4405-8052-8B5692D5AD90}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GithubPrChangesCheckerActionTests", "github-pr-changes-checker-action\test\GithubPrChangesCheckerActionTests.csproj", "{5EA0DA72-DFA7-4F19-9C2E-3AB21C47C47A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GithubPrChangesCheckerActionTests", "GithubPrChangesCheckerAction\test\GithubPrChangesCheckerActionTests.csproj", "{5EA0DA72-DFA7-4F19-9C2E-3AB21C47C47A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

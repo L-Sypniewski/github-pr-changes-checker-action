@@ -9,16 +9,16 @@ on:
       pr_number:
         required: true
 permissions:
-  actions: none
-  checks: none
-  contents: none
+  actions: read
+  checks: read
+  contents: read
   deployments: read
-  id-token: none
+  id-token: read
   issues: none
   discussions: none
   packages: none
   pages: none
-  pull-requests: none
+  pull-requests: read
   repository-projects: write
   security-events: write
   statuses: read

@@ -12,6 +12,7 @@ using var host = Host.CreateDefaultBuilder(args)
                      .UseEnvironment(currentEnvironment ?? Environments.Production)
                      .ConfigureAppConfiguration(builder =>
                      {
+                         builder.SetBasePath(AppContext.BaseDirectory);
                          builder.AddJsonFile("appsettings.json", optional: false);
                          builder.AddJsonFile($"appsettings.{currentEnvironment}.json", optional: true);
                      })

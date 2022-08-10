@@ -5,7 +5,10 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using static CommandLine.Parser;
 
+var currentEnvironment = Environment.GetEnvironmentVariable("DOTNET_ENVIRONMENT");
+
 using var host = Host.CreateDefaultBuilder(args)
+                     .UseEnvironment(currentEnvironment ?? Environments.Production)
                      .ConfigureServices(services =>
                      {
                          services.AddTransient<GithubClient>();
@@ -35,7 +38,8 @@ await host.RunAsync();
 
 static async Task StartAnalysisAsync(ActionInputs inputs, IHost host)
 {
-    host.WaitForDebuggerToBeAttached("Development");
+    var hostEnv = host.Services.GetRequiredService<IHostEnvironment>();
+    host.WaitForDebuggerToBeAttached(hostEnv.EnvironmentName, onCheck: () => Console.WriteLine("WaitForDebugger"));
 
     var client = Get<GithubClient>(host);
     var updatedProjects = await client.GetChangedProjectsNames(inputs.Owner, inputs.Name, inputs.PrNumber, inputs.GithubToken);

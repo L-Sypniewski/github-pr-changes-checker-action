@@ -39,9 +39,7 @@ static async Task StartAnalysisAsync(ActionInputs inputs, IHost host)
     host.WaitForDebuggerToBeAttached("Development", onCheck: () => System.Console.WriteLine("WaitForDebugger"));
 
     var client = Get<GithubClient>(host);
-    var response = await client.GetResponse(inputs.Owner, inputs.Name, inputs.PrNumber, inputs.GithubToken);
-
-    var updatedProjects = response.Select(x => x.Filename.Split('/').First()).Distinct().ToArray();
+    var updatedProjects = await client.GetChangedProjectsNames(inputs.Owner, inputs.Name, inputs.PrNumber, inputs.GithubToken);
 
     Console.WriteLine($"::set-output name=updated-projects::{string.Join(';', updatedProjects)}");
 

@@ -5,21 +5,20 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using static CommandLine.Parser;
 
-using IHost host = Host.CreateDefaultBuilder(args)
-.ConfigureServices(services =>
-{
-    services.AddTransient<GithubClient>();
-    services.AddHttpClient<GithubClient>((serviceProvider, httpClient) =>
-    {
-        httpClient.BaseAddress = new Uri("https://api.github.com");
-        httpClient.DefaultRequestHeaders.Add("Accept", "application/vnd.github.v3+json");
-        httpClient.DefaultRequestHeaders.Add("User-Agent", "product/1");
-    });
-}).Build();
+using var host = Host.CreateDefaultBuilder(args)
+                     .ConfigureServices(services =>
+                     {
+                         services.AddTransient<GithubClient>();
+                         services.AddHttpClient<GithubClient>((serviceProvider, httpClient) =>
+                         {
+                             httpClient.BaseAddress = new Uri("https://api.github.com");
+                             httpClient.DefaultRequestHeaders.Add("Accept", "application/vnd.github.v3+json");
+                             httpClient.DefaultRequestHeaders.Add("User-Agent", "product/1");
+                         });
+                     }).Build();
 
 static TService Get<TService>(IHost host)
-    where TService : notnull =>
-    host.Services.GetRequiredService<TService>();
+    where TService : notnull => host.Services.GetRequiredService<TService>();
 
 var parser = Default.ParseArguments<ActionInputs>(() => new(), args);
 parser.WithNotParsed(
@@ -36,7 +35,7 @@ await host.RunAsync();
 
 static async Task StartAnalysisAsync(ActionInputs inputs, IHost host)
 {
-    host.WaitForDebuggerToBeAttached("Development", onCheck: () => System.Console.WriteLine("WaitForDebugger"));
+    host.WaitForDebuggerToBeAttached("Development");
 
     var client = Get<GithubClient>(host);
     var updatedProjects = await client.GetChangedProjectsNames(inputs.Owner, inputs.Name, inputs.PrNumber, inputs.GithubToken);

@@ -1,3 +1,4 @@
+using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 
@@ -7,10 +8,7 @@ public class GithubClient
 {
     private readonly HttpClient _httpClient;
 
-    public GithubClient(HttpClient httpClient)
-    {
-        _httpClient = httpClient;
-    }
+    public GithubClient(HttpClient httpClient) { _httpClient = httpClient; }
 
     public async Task<string[]> GetChangedProjectsNames(string owner, string name, string prNumber, string token)
     {
@@ -22,9 +20,9 @@ public class GithubClient
         var githubResponse = await GetFileChanges(_httpClient, requestUri);
 
         return githubResponse?
-        .Select(x => x.Filename.Split('/').First())
-        .Distinct()
-        .ToArray() ?? Array.Empty<string>();
+               .Select(x => x.Filename.Split('/').First())
+               .Distinct()
+               .ToArray() ?? Array.Empty<string>();
     }
 
     private static async Task<GithubFileChange[]> GetFileChanges(HttpClient httpClient, string requestUri)
@@ -41,7 +39,7 @@ public class GithubClient
             {
                 pageResults = await httpClient.GetFromJsonAsync<GithubFileChange[]>(uriWithParams);
             }
-            catch (HttpRequestException exception) when (exception.StatusCode != System.Net.HttpStatusCode.OK)
+            catch (HttpRequestException exception) when (exception.StatusCode != HttpStatusCode.OK)
             {
                 return Array.Empty<GithubFileChange>();
             }

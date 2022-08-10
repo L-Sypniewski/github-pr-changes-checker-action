@@ -22,7 +22,7 @@ public class GithubClientTests
         _messageHandlerMock = new Mock<HttpMessageHandler>();
         var httpClient = new HttpClient(_messageHandlerMock.Object)
         {
-            BaseAddress = new Uri("http://example.com")
+            BaseAddress = new Uri("https://example.com")
         };
         _sut = new GithubClient(httpClient);
     }
@@ -96,7 +96,10 @@ public class GithubClientTests
             "SomeOther/def/program.cs",
             "AnotherProject_page2/abc/def/index.html");
 
-        var contentFromPage3 = GenerateTestData("SuperSecretProjects_page3/abc/def/main.cs");
+        var contentFromPage3 = GenerateTestData(
+            "AnotherProject_page2/abc/def/index.html",
+            "SuperSecretProjects_page3/abc/def/main.cs"
+            );
 
         _messageHandlerMock.Protected()
                            .SetupSequence<Task<HttpResponseMessage>>(

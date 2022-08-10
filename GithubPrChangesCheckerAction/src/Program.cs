@@ -40,7 +40,6 @@ parser.WithNotParsed(
     });
 
 await parser.WithParsedAsync(options => StartAnalysisAsync(options, host));
-await host.RunAsync();
 
 static async Task StartAnalysisAsync(ActionInputs inputs, IHost host)
 {
@@ -53,6 +52,4 @@ static async Task StartAnalysisAsync(ActionInputs inputs, IHost host)
     Console.WriteLine($"::set-output name=updated-projects::{string.Join(';', updatedProjects)}");
 
     await Task.CompletedTask;
-
-    Environment.Exit(0);
 }

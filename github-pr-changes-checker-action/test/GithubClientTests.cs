@@ -33,7 +33,7 @@ public class GithubClientTests
         var content = GenerateTestData("MySingleProject/abc/def/code.cs");
 
         _messageHandlerMock.Protected()
-       .Setup<Task<HttpResponseMessage>>(
+       .SetupSequence<Task<HttpResponseMessage>>(
         "SendAsync",
         ItExpr.IsAny<HttpRequestMessage>(),
         ItExpr.IsAny<CancellationToken>()
@@ -42,6 +42,11 @@ public class GithubClientTests
         {
             StatusCode = HttpStatusCode.OK,
             Content = new StringContent(content)
+        })
+        .ReturnsAsync(new HttpResponseMessage()
+        {
+            StatusCode = HttpStatusCode.OK,
+            Content = new StringContent("[]")
         });
 
         var results = await _sut.GetChangedProjectsNames(default!, default!, default!, default!);
@@ -58,7 +63,7 @@ public class GithubClientTests
             "AnotherProject/abc/def/styles.css");
 
         _messageHandlerMock.Protected()
-       .Setup<Task<HttpResponseMessage>>(
+       .SetupSequence<Task<HttpResponseMessage>>(
         "SendAsync",
         ItExpr.IsAny<HttpRequestMessage>(),
         ItExpr.IsAny<CancellationToken>()
@@ -67,6 +72,11 @@ public class GithubClientTests
         {
             StatusCode = HttpStatusCode.OK,
             Content = new StringContent(content)
+        })
+        .ReturnsAsync(new HttpResponseMessage()
+        {
+            StatusCode = HttpStatusCode.OK,
+            Content = new StringContent("[]")
         });
 
         var results = await _sut.GetChangedProjectsNames(default!, default!, default!, default!);
@@ -108,6 +118,11 @@ public class GithubClientTests
         {
             StatusCode = HttpStatusCode.OK,
             Content = new StringContent(contentFromPage3)
+        })
+        .ReturnsAsync(new HttpResponseMessage()
+        {
+            StatusCode = HttpStatusCode.OK,
+            Content = new StringContent("[]")
         });
 
         var results = await _sut.GetChangedProjectsNames(default!, default!, default!, default!);

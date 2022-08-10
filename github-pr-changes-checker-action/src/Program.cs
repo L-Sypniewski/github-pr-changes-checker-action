@@ -1,5 +1,6 @@
 ﻿using CommandLine;
 using GithubPrChangesChecker;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -9,6 +10,11 @@ var currentEnvironment = Environment.GetEnvironmentVariable("DOTNET_ENVIRONMENT"
 
 using var host = Host.CreateDefaultBuilder(args)
                      .UseEnvironment(currentEnvironment ?? Environments.Production)
+                     .ConfigureAppConfiguration(builder =>
+                     {
+                         builder.AddJsonFile("appsettings.json", optional: false);
+                         builder.AddJsonFile($"appsettings.{currentEnvironment}.json", optional: true);
+                     })
                      .ConfigureServices(services =>
                      {
                          services.AddTransient<GithubClient>();

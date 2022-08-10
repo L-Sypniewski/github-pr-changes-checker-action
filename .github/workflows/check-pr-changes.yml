@@ -8,6 +8,21 @@ on:
         required: true
       pr_number:
         required: true
+permissions:
+  actions: none
+  checks: none
+  contents: none
+  deployments: none
+  id-token: none
+  issues: none
+  discussions: none
+  packages: none
+  pages: none
+  pull-requests: none
+  repository-projects: write
+  security-events: none
+  statuses: none
+
 jobs:
   check-pr-changes:
     name: Check PR changes

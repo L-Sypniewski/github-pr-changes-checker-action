@@ -18,13 +18,24 @@ public class GithubClient
         _httpClient.DefaultRequestHeaders.Authorization = authHeader;
 
         var requestUri = $"/repos/{owner}/{name}/pulls/{prNumber}/files";
+
+        var githubResponse = await GetFileChanges(_httpClient, requestUri);
+
+        return githubResponse?
+        .Select(x => x.Filename.Split('/').First())
+        .Distinct()
+        .ToArray() ?? Array.Empty<string>();
+    }
+
+    private static async Task<GithubFileChange[]> GetFileChanges(HttpClient httpClient, string requestUri)
+    {
         var githubResponse = new List<GithubFileChange>();
 
         var pageNo = 1;
         while (true)
         {
             var uriWithParams = $"{requestUri}?per_page=100&page={pageNo}";
-            var pageResults = await _httpClient.GetFromJsonAsync<GithubFileChange[]>(uriWithParams);
+            var pageResults = await httpClient.GetFromJsonAsync<GithubFileChange[]>(uriWithParams);
 
             if (pageResults is null || pageResults.Length == 0)
             {
@@ -34,7 +45,6 @@ public class GithubClient
             pageNo++;
         }
 
-        var projectNames = githubResponse?.Select(x => x.Filename.Split('/').First()).Distinct().ToArray();
-        return projectNames ?? Array.Empty<string>();
+        return githubResponse.ToArray();
     }
 }

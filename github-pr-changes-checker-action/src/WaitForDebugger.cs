@@ -35,7 +35,7 @@ public static class WaitForDebugger
             throw new ArgumentException("Argument cannot be negative", nameof(maxNumberOfAttempts));
         }
 
-        if (currentEnvironment != nameof(EnvironmentName.Development) || !optionalCondition)
+        if (currentEnvironment != nameof(Environments.Development) || !optionalCondition)
         {
             return;
         }

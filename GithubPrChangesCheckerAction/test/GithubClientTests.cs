@@ -1,7 +1,8 @@
 using System;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Text;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
@@ -34,27 +35,10 @@ public class GithubClientTests
     [InlineData("owner", null, "prNumber", "token")]
     [InlineData("owner", "", "prNumber", "token")]
     [InlineData("owner", "   ", "prNumber", "token")]
+    [InlineData("owner", "   ", "prNumber", null)]
+    [InlineData(null, null, null, null)]
     public async Task GetResponse_ThrowArgumentException_WhenProvidedParameterIsNullOrEmpty(string owner, string name, string prNumber, string token)
     {
-        var content = GenerateTestData("MySingleProject/abc/def/code.cs");
-
-        _messageHandlerMock.Protected()
-                           .SetupSequence<Task<HttpResponseMessage>>(
-                               "SendAsync",
-                               ItExpr.IsAny<HttpRequestMessage>(),
-                               ItExpr.IsAny<CancellationToken>()
-                           )
-                           .ReturnsAsync(new HttpResponseMessage
-                           {
-                               StatusCode = HttpStatusCode.OK,
-                               Content = new StringContent(content)
-                           })
-                           .ReturnsAsync(new HttpResponseMessage
-                           {
-                               StatusCode = HttpStatusCode.OK,
-                               Content = new StringContent("[]")
-                           });
-
         Func<Task> act = async () => await _sut.GetChangedProjectsNames(owner, name, prNumber, token);
         await act.Should().ThrowExactlyAsync<ArgumentException>();
     }
@@ -130,7 +114,7 @@ public class GithubClientTests
             "AnotherProject_page2/abc/def/index.html");
 
         var contentFromPage3 = GenerateTestData(
-            "AnotherProject_page2/abc/def/index.html",
+            "AnotherProject_page2/abc/def/styles.css",
             "SuperSecretProjects_page3/abc/def/main.cs"
             );
 
@@ -185,16 +169,7 @@ public class GithubClientTests
 
     private static string GenerateTestData(params string[] filenames)
     {
-        var stringBuilder = new StringBuilder("[");
-        for (var i = 0; i < filenames.Length; i++)
-        {
-            stringBuilder.Append($"{{\"FileName\": \"{filenames[i]}\"}}");
-            if (i != filenames.Length - 1)
-            {
-                stringBuilder.Append(',');
-            }
-        }
-        stringBuilder.Append(']');
-        return stringBuilder.ToString();
+        var fileChanges = filenames.Select(x => new { FileName = x }).ToArray();
+        return JsonSerializer.Serialize(fileChanges);
     }
 }

@@ -14,6 +14,8 @@ jobs:
   check-pr-changes:
     name: Check PR changes
     runs-on: ubuntu-latest
+    outputs:
+      updated-projects: ${{ steps.check-pr-changes-step.outputs.updated-projects }}
     steps:
       - name: Check PR changes step
         id: check-pr-changes-step
@@ -26,3 +28,32 @@ jobs:
       - name: Print output
         run: |
           echo '${{ steps.check-pr-changes-step.outputs.updated-projects }}'
+  print-if-project-was-modified:
+    name: Print output if project was modified
+    needs: [check-pr-changes]
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        project:
+          [
+            "Core",
+            "DependencyInjection",
+            "DependencyInjectionAutofac",
+            "HtmlAgilityPack",
+            "Logging",
+            "LoggingSerilog",
+            "Parallel",
+            "Reflection",
+            "StockToolset",
+          ]
+    steps:
+      - name: Check which projects have been modified
+        run: |
+          echo PROJECT_NAMES='${{needs.check-pr-changes.outputs.updated-projects}}' >> $GITHUB_ENV
+          echo "Modified projects: $PROJECT_NAMES"
+      - name: Bump version and push tag for ${{ matrix.project }} project if it has been modified
+        if: contains(env.PROJECT_NAMES, matrix.project)
+        # if: contains(env.PROJECT_NAMES, matrix.project) || contains(env.PROJECT_NAMES, '.props') || contains(env.PROJECT_NAMES, 'Shared') || github.event_name == 'workflow_dispatch'
+        id: print-output
+        run: |
+          echo "Modified project ${{ matrix.project }}"

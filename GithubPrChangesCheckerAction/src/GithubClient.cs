@@ -12,6 +12,7 @@ public class GithubClient
 
     public async Task<string[]> GetChangedProjectsNames(string owner, string name, string prNumber, string token)
     {
+        ValidateParams(owner, name, prNumber, token);
         AuthenticationHeaderValue authHeader = new("token", token);
         _httpClient.DefaultRequestHeaders.Authorization = authHeader;
 
@@ -23,6 +24,18 @@ public class GithubClient
                .Select(x => x.Filename.Split('/').First())
                .Distinct()
                .ToArray() ?? Array.Empty<string>();
+    }
+
+    private static void ValidateParams(string owner, string name, string prNumber, string token)
+    {
+        if (string.IsNullOrWhiteSpace(owner))
+            throw new ArgumentException("Parameter must not be null or empty", nameof(owner));
+        if (string.IsNullOrWhiteSpace(name))
+            throw new ArgumentException("Parameter must not be null or empty", nameof(name));
+        if (string.IsNullOrWhiteSpace(prNumber))
+            throw new ArgumentException("Parameter must not be null or empty", nameof(prNumber));
+        if (string.IsNullOrWhiteSpace(token))
+            throw new ArgumentException("Parameter must not be null or empty", nameof(token));
     }
 
     private static async Task<GithubFileChange[]> GetFileChanges(HttpClient httpClient, string requestUri)

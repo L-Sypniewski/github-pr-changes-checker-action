@@ -27,6 +27,39 @@ public class GithubClientTests
         _sut = new GithubClient(httpClient);
     }
 
+    [Theory]
+    [InlineData(null, "name", "prNumber", "token")]
+    [InlineData("", "name", "prNumber", "token")]
+    [InlineData("   ", "name", "prNumber", "token")]
+    [InlineData("owner", null, "prNumber", "token")]
+    [InlineData("owner", "", "prNumber", "token")]
+    [InlineData("owner", "   ", "prNumber", "token")]
+    public async Task GetResponse_ThrowArgumentException_WhenProvidedParameterIsNullOrEmpty(string owner, string name, string prNumber, string token)
+    {
+        var content = GenerateTestData("MySingleProject/abc/def/code.cs");
+
+        _messageHandlerMock.Protected()
+                           .SetupSequence<Task<HttpResponseMessage>>(
+                               "SendAsync",
+                               ItExpr.IsAny<HttpRequestMessage>(),
+                               ItExpr.IsAny<CancellationToken>()
+                           )
+                           .ReturnsAsync(new HttpResponseMessage
+                           {
+                               StatusCode = HttpStatusCode.OK,
+                               Content = new StringContent(content)
+                           })
+                           .ReturnsAsync(new HttpResponseMessage
+                           {
+                               StatusCode = HttpStatusCode.OK,
+                               Content = new StringContent("[]")
+                           });
+
+        Func<Task> act = async () => await _sut.GetChangedProjectsNames(owner, name, prNumber, token);
+        await act.Should().ThrowExactlyAsync<ArgumentException>();
+    }
+
+
     [Fact]
     public async Task GetResponse_ReturnsProjectFolderName_WhenSingleFileWasChanged()
     {
@@ -49,7 +82,7 @@ public class GithubClientTests
                                Content = new StringContent("[]")
                            });
 
-        var results = await _sut.GetChangedProjectsNames(default!, default!, default!, default!);
+        var results = await _sut.GetChangedProjectsNames("abc", "abc", "abc", "abc");
         results.Should().BeEquivalentTo("MySingleProject");
     }
 
@@ -79,7 +112,7 @@ public class GithubClientTests
                                Content = new StringContent("[]")
                            });
 
-        var results = await _sut.GetChangedProjectsNames(default!, default!, default!, default!);
+        var results = await _sut.GetChangedProjectsNames("abc", "abc", "abc", "abc");
         results.Should().BeEquivalentTo("MySingleProject", "AnotherProject");
     }
 
@@ -128,12 +161,12 @@ public class GithubClientTests
                                Content = new StringContent("[]")
                            });
 
-        var results = await _sut.GetChangedProjectsNames(default!, default!, default!, default!);
+        var results = await _sut.GetChangedProjectsNames("abc", "abc", "abc", "abc");
         results.Should().BeEquivalentTo("MySingleProject_page1", "AnotherProject_page1", "MySingleProject_page2", "SomeOther", "AnotherProject_page2", "SuperSecretProjects_page3");
     }
 
     [Fact]
-    public async Task GetResponse_Throws_WhenResponseIsNotFound()
+    public async Task GetResponse_ThrowsHttpRequestException_WhenResponseIsNotFound()
     {
         _messageHandlerMock.Protected()
                            .SetupSequence<Task<HttpResponseMessage>>(
@@ -146,8 +179,8 @@ public class GithubClientTests
                                StatusCode = HttpStatusCode.NotFound
                            });
 
-        Func<Task> act = async () => await _sut.GetChangedProjectsNames(default!, default!, default!, default!);
-        await act.Should().ThrowAsync<Exception>();
+        Func<Task> act = async () => await _sut.GetChangedProjectsNames("abc", "abc", "abc", "abc");
+        await act.Should().ThrowExactlyAsync<HttpRequestException>();
     }
 
     private static string GenerateTestData(params string[] filenames)

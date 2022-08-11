@@ -1,4 +1,5 @@
-﻿using CommandLine;
+﻿using System.Text.Json;
+using CommandLine;
 using GithubPrChangesChecker;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -49,8 +50,9 @@ static async Task StartAnalysisAsync(ActionInputs inputs, IHost host)
 
     var client = Get<GithubClient>(host);
     var updatedProjects = await client.GetChangedProjectsNames(inputs.Owner, inputs.Name, inputs.PrNumber, inputs.GithubToken);
+    var json = JsonSerializer.Serialize(updatedProjects);
 
-    Console.WriteLine($"::set-output name=updated-projects::{string.Join(',', updatedProjects)}");
+    Console.WriteLine($"::set-output name=updated-projects::{json}");
 
     await Task.CompletedTask;
 }

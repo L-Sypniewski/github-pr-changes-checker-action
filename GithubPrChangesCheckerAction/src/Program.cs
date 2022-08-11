@@ -50,7 +50,7 @@ static async Task StartAnalysisAsync(ActionInputs inputs, IHost host)
     var client = Get<GithubClient>(host);
     var updatedProjects = await client.GetChangedProjectsNames(inputs.Owner, inputs.Name, inputs.PrNumber, inputs.GithubToken);
 
-    Console.WriteLine($"::set-output name=updated-projects::{string.Join(';', updatedProjects)}");
+    Console.WriteLine($"::set-output name=updated-projects::{string.Join(',', updatedProjects)}");
 
     await Task.CompletedTask;
 }

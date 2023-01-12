@@ -7,22 +7,17 @@
             "request": "attach",
             "platform": "netCore",
             "sourceFileMap": {
-                "/app": "${workspaceFolder}"
+                "/src": "${workspaceFolder}"
             }
         },
         {
-            // Use IntelliSense to find out which attributes exist for C# debugging
-            // Use hover for the description of the existing attributes
-            // For further information visit https://github.com/OmniSharp/omnisharp-vscode/blob/master/debugger-launchjson.md
             "name": ".NET Core Launch (console)",
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/GithubPrChangesCheckerAction/bin/Debug/net6.0/GithubPrChangesCheckerAction.dll",
+            "program": "${workspaceFolder}/GithubPrChangesCheckerAction/src/bin/Debug/net6.0/GithubPrChangesCheckerAction.dll",
             "args": [],
-            "cwd": "${workspaceFolder}/GithubPrChangesCheckerAction",
-            // For more information about the 'console' field, see https://aka.ms/VSCode-CS-LaunchJson-Console
+            "cwd": "${workspaceFolder}/GithubPrChangesCheckerAction/src",
             "console": "internalConsole",
             "stopAtEntry": false
         },

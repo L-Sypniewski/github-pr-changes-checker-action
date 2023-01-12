@@ -5,6 +5,6 @@ services:
     image: githubprchangescheckeraction
     build:
       context: .
-      dockerfile: GithubPrChangesCheckerAction/src/Dockerfile
+      dockerfile: ./dockerfile
     environment:
       - DOTNET_ENVIRONMENT=Development

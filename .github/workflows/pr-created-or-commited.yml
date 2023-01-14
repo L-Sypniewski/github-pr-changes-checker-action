@@ -1,0 +1,18 @@
+name: Run tests on PR creation or when commited to the PR
+on:
+  pull_request:
+    branches:
+      - master
+    types: [opened, synchronize]
+jobs:
+  run-tests:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Run tests
+        run: |
+          dotnet test

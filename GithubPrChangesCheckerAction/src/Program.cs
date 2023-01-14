@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System.Text;
+using System.Text.Json;
 using CommandLine;
 using GithubPrChangesChecker;
 using Microsoft.Extensions.Configuration;
@@ -28,8 +29,10 @@ using var host = Host.CreateDefaultBuilder(args)
                          });
                      }).Build();
 
-static TService Get<TService>(IHost host)
-    where TService : notnull => host.Services.GetRequiredService<TService>();
+static TService Get<TService>(IHost host) where TService : notnull
+{
+    return host.Services.GetRequiredService<TService>();
+}
 
 var parser = Default.ParseArguments<ActionInputs>(() => new(), args);
 parser.WithNotParsed(
@@ -52,7 +55,33 @@ static async Task StartAnalysisAsync(ActionInputs inputs, IHost host)
     var updatedProjects = await client.GetChangedProjectsNames(inputs.Owner, inputs.Name, inputs.PrNumber, inputs.GithubToken);
     var json = JsonSerializer.Serialize(updatedProjects);
 
-    Console.WriteLine($"::set-output name=updated-projects::{json}");
+
+    await SetOutputs(new KeyValuePair<string, string>("updated-projects", json));
+
+    if (hostEnv.EnvironmentName == Environments.Development)
+    {
+        var logger = Get<ILoggerFactory>(host)
+            .CreateLogger("GithubPrChangesChecker.Program");
+
+        logger?.LogInformation("Outputs:\n'updated-projects': {Json}", json);
+    }
 
     await Task.CompletedTask;
+}
+
+static Task SetOutputs(params KeyValuePair<string, string>[] outputValues)
+{
+    // Write GitHub Action workflow outputs.
+    var gitHubOutputFile = Environment.GetEnvironmentVariable("GITHUB_OUTPUT");
+    if (string.IsNullOrWhiteSpace(gitHubOutputFile))
+    {
+        return Task.CompletedTask;
+    }
+
+    using StreamWriter textWriter = new(gitHubOutputFile, true, Encoding.UTF8);
+    var setOutputTasks = outputValues
+        .Select(kvp => textWriter.WriteLineAsync($"{kvp.Key}={kvp.Value}"))
+        .ToArray();
+
+    return Task.WhenAll(setOutputTasks);
 }

@@ -3,10 +3,13 @@ on:
   workflow_dispatch:
     inputs:
       owner:
+        description: 'Repo owner'
         required: true
       name:
+        description: 'Repo name'
         required: true
       pr_number:
+        description: 'Number of PR to be checked'
         required: true
 permissions: write-all
 

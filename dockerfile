@@ -32,7 +32,7 @@ ARG BUILD_CONFIG=Release
 RUN dotnet build "GithubPrChangesCheckerAction.csproj" -c ${BUILD_CONFIG} -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "GithubPrChangesCheckerAction.csproj" -c ${BUILD_CONFIG} -o /app/publish --no-self-contained /p:UseAppHost=false
+RUN dotnet publish "GithubPrChangesCheckerAction.csproj" -c ${BUILD_CONFIG} -o '/app/publish' --no-self-contained /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app

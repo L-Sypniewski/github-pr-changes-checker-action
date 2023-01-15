@@ -29,10 +29,7 @@ using var host = Host.CreateDefaultBuilder(args)
                          });
                      }).Build();
 
-static TService Get<TService>(IHost host) where TService : notnull
-{
-    return host.Services.GetRequiredService<TService>();
-}
+static TService Get<TService>(IHost host) where TService : notnull { return host.Services.GetRequiredService<TService>(); }
 
 var parser = Default.ParseArguments<ActionInputs>(() => new(), args);
 parser.WithNotParsed(
@@ -67,21 +64,41 @@ static async Task StartAnalysisAsync(ActionInputs inputs, IHost host)
     }
 
     await Task.CompletedTask;
-}
 
-static Task SetOutputs(params KeyValuePair<string, string>[] outputValues)
-{
-    // Write GitHub Action workflow outputs.
-    var gitHubOutputFile = Environment.GetEnvironmentVariable("GITHUB_OUTPUT");
-    if (string.IsNullOrWhiteSpace(gitHubOutputFile))
+
+    static async Task SetOutputs(params KeyValuePair<string, string>[] outputValues)
     {
-        return Task.CompletedTask;
+        var gitHubOutputFile = Environment.GetEnvironmentVariable("GITHUB_OUTPUT");
+        if (string.IsNullOrWhiteSpace(gitHubOutputFile))
+        {
+            return;
+        }
+
+        try
+        {
+            await using StreamWriter textWriter = new(gitHubOutputFile, true, Encoding.UTF8);
+            {
+                foreach (var value in outputValues)
+                {
+                    textWriter.WriteLine($"{value.Key}={value.Value}");
+                }
+            }
+        }
+        catch (Exception exception)
+        {
+            Console.WriteLine($"Exception was thrown when trying to set output with GITHUB_OUTPUT variable: {exception.Message}");
+            Console.WriteLine("Legacy ::set-output will be used");
+            await SetOutputsLegacy(outputValues);
+        }
     }
 
-    using StreamWriter textWriter = new(gitHubOutputFile, true, Encoding.UTF8);
-    var setOutputTasks = outputValues
-        .Select(kvp => textWriter.WriteLineAsync($"{kvp.Key}={kvp.Value}"))
-        .ToArray();
 
-    return Task.WhenAll(setOutputTasks);
+    static Task SetOutputsLegacy(params KeyValuePair<string, string>[] outputValues)
+    {
+        foreach (var value in outputValues)
+        {
+            Console.WriteLine($"::set-output name={value.Key}::{value.Value}");
+        }
+        return Task.CompletedTask;
+    }
 }

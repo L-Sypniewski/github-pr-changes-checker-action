@@ -2,6 +2,22 @@
     "version": "2.0.0",
     "tasks": [
         {
+            "label": "act - check PR changes",
+            "command": "act",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "args": [
+                "--rebuild",
+                "--job",
+                "check-pr-changes",
+                "--env-file",
+                ".act/.env",
+                "--rm"
+            ],
+            "type": "shell"
+        },
+        {
             "label": "build",
             "command": "dotnet",
             "type": "process",
@@ -13,22 +29,22 @@
             ],
             "problemMatcher": "$msCompile"
         },
-    {
-        "label": "docker-compose up",
-        "command": "docker-compose",
-        "options": {
-            "cwd": "${workspaceFolder}"
+        {
+            "label": "docker-compose up",
+            "command": "docker-compose",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "args": [
+                "-f",
+                "docker-compose.debug.yml",
+                "-f",
+                "docker-compose.yml",
+                "up",
+                "--build",
+            ],
+            "type": "shell",
         },
-        "args": [
-            "-f",
-            "docker-compose.debug.yml",
-            "-f",
-            "docker-compose.yml",
-            "up",
-            "--build",
-        ],
-        "type": "shell",
-    },
         {
             "label": "watch",
             "command": "dotnet",

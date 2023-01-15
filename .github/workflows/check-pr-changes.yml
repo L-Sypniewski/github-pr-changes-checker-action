@@ -16,7 +16,7 @@ permissions: write-all
 jobs:
   check-pr-changes:
     name: Check PR changes
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     outputs:
       updated-projects: ${{ steps.check-pr-changes-step.outputs.updated-projects }}
     steps:

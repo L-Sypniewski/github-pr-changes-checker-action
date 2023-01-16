@@ -50,21 +50,26 @@ public class GithubClientTests
         var content = GenerateTestData("MySingleProject/abc/def/code.cs");
 
         _messageHandlerMock.Protected()
-                           .SetupSequence<Task<HttpResponseMessage>>(
+                           .Setup<Task<HttpResponseMessage>>(
                                "SendAsync",
-                               ItExpr.IsAny<HttpRequestMessage>(),
+                               ItExpr.Is<HttpRequestMessage>(m => m.RequestUri!.Query.EndsWith("page=1")),
                                ItExpr.IsAny<CancellationToken>()
-                           )
-                           .ReturnsAsync(new HttpResponseMessage
+                           ).ReturnsAsync(new HttpResponseMessage
                            {
                                StatusCode = HttpStatusCode.OK,
                                Content = new StringContent(content)
-                           })
-                           .ReturnsAsync(new HttpResponseMessage
+                           });
+        _messageHandlerMock.Protected()
+                           .Setup<Task<HttpResponseMessage>>(
+                               "SendAsync",
+                               ItExpr.Is<HttpRequestMessage>(m => m.RequestUri!.Query.EndsWith("page=2")),
+                               ItExpr.IsAny<CancellationToken>()
+                           ).ReturnsAsync(new HttpResponseMessage
                            {
                                StatusCode = HttpStatusCode.OK,
                                Content = new StringContent("[]")
                            });
+
 
         var results = await _sut.GetChangedProjectsNames("abc", "abc", "abc", "abc");
         results.Should().BeEquivalentTo("MySingleProject");
@@ -80,17 +85,21 @@ public class GithubClientTests
             "AnotherProject/abc/def/styles.css");
 
         _messageHandlerMock.Protected()
-                           .SetupSequence<Task<HttpResponseMessage>>(
+                              .Setup<Task<HttpResponseMessage>>(
+                                  "SendAsync",
+                                  ItExpr.Is<HttpRequestMessage>(m => m.RequestUri!.Query.EndsWith("page=1")),
+                                  ItExpr.IsAny<CancellationToken>()
+                              ).ReturnsAsync(new HttpResponseMessage
+                              {
+                                  StatusCode = HttpStatusCode.OK,
+                                  Content = new StringContent(content)
+                              });
+        _messageHandlerMock.Protected()
+                           .Setup<Task<HttpResponseMessage>>(
                                "SendAsync",
-                               ItExpr.IsAny<HttpRequestMessage>(),
+                               ItExpr.Is<HttpRequestMessage>(m => m.RequestUri!.Query.EndsWith("page=2")),
                                ItExpr.IsAny<CancellationToken>()
-                           )
-                           .ReturnsAsync(new HttpResponseMessage
-                           {
-                               StatusCode = HttpStatusCode.OK,
-                               Content = new StringContent(content)
-                           })
-                           .ReturnsAsync(new HttpResponseMessage
+                           ).ReturnsAsync(new HttpResponseMessage
                            {
                                StatusCode = HttpStatusCode.OK,
                                Content = new StringContent("[]")
@@ -114,54 +123,67 @@ public class GithubClientTests
             "AnotherProject_page2/abc/def/index.html");
 
         var contentFromPage3 = GenerateTestData(
-            "AnotherProject_page2/abc/def/styles.css",
+            "AnotherProject_page3/abc/def/styles.css",
             "SuperSecretProjects_page3/abc/def/main.cs"
             );
 
         _messageHandlerMock.Protected()
-                           .SetupSequence<Task<HttpResponseMessage>>(
+                           .Setup<Task<HttpResponseMessage>>(
                                "SendAsync",
-                               ItExpr.IsAny<HttpRequestMessage>(),
+                               ItExpr.Is<HttpRequestMessage>(m => m.RequestUri!.Query.EndsWith("page=1")),
                                ItExpr.IsAny<CancellationToken>()
-                           )
-                           .ReturnsAsync(new HttpResponseMessage
+                           ).ReturnsAsync(new HttpResponseMessage
                            {
                                StatusCode = HttpStatusCode.OK,
                                Content = new StringContent(contentFromPage1)
-                           })
-                           .ReturnsAsync(new HttpResponseMessage
+                           });
+        _messageHandlerMock.Protected()
+                           .Setup<Task<HttpResponseMessage>>(
+                               "SendAsync",
+                               ItExpr.Is<HttpRequestMessage>(m => m.RequestUri!.Query.EndsWith("page=2")),
+                               ItExpr.IsAny<CancellationToken>()
+                           ).ReturnsAsync(new HttpResponseMessage
                            {
                                StatusCode = HttpStatusCode.OK,
                                Content = new StringContent(contentFromPage2)
-                           })
-                           .ReturnsAsync(new HttpResponseMessage
+                           });
+        _messageHandlerMock.Protected()
+                           .Setup<Task<HttpResponseMessage>>(
+                               "SendAsync",
+                               ItExpr.Is<HttpRequestMessage>(m => m.RequestUri!.Query.EndsWith("page=3")),
+                               ItExpr.IsAny<CancellationToken>()
+                           ).ReturnsAsync(new HttpResponseMessage
                            {
                                StatusCode = HttpStatusCode.OK,
                                Content = new StringContent(contentFromPage3)
-                           })
-                           .ReturnsAsync(new HttpResponseMessage
+                           });
+        _messageHandlerMock.Protected()
+                           .Setup<Task<HttpResponseMessage>>(
+                               "SendAsync",
+                               ItExpr.Is<HttpRequestMessage>(m => m.RequestUri!.Query.EndsWith("page=4")),
+                               ItExpr.IsAny<CancellationToken>()
+                           ).ReturnsAsync(new HttpResponseMessage
                            {
                                StatusCode = HttpStatusCode.OK,
                                Content = new StringContent("[]")
                            });
 
         var results = await _sut.GetChangedProjectsNames("abc", "abc", "abc", "abc");
-        results.Should().BeEquivalentTo("MySingleProject_page1", "AnotherProject_page1", "MySingleProject_page2", "SomeOther", "AnotherProject_page2", "SuperSecretProjects_page3");
+        results.Should().BeEquivalentTo("MySingleProject_page1", "AnotherProject_page1", "MySingleProject_page2", "SomeOther", "AnotherProject_page2", "AnotherProject_page3", "SuperSecretProjects_page3");
     }
 
     [Fact]
     public async Task GetResponse_ThrowsHttpRequestException_WhenResponseIsNotFound()
     {
         _messageHandlerMock.Protected()
-                           .SetupSequence<Task<HttpResponseMessage>>(
-                               "SendAsync",
-                               ItExpr.IsAny<HttpRequestMessage>(),
-                               ItExpr.IsAny<CancellationToken>()
-                           )
-                           .ReturnsAsync(new HttpResponseMessage
-                           {
-                               StatusCode = HttpStatusCode.NotFound
-                           });
+                             .Setup<Task<HttpResponseMessage>>(
+                                 "SendAsync",
+                                 ItExpr.Is<HttpRequestMessage>(m => m.RequestUri!.Query.EndsWith("page=1")),
+                                 ItExpr.IsAny<CancellationToken>()
+                             ).ReturnsAsync(new HttpResponseMessage
+                             {
+                                 StatusCode = HttpStatusCode.NotFound
+                             });
 
         Func<Task> act = async () => await _sut.GetChangedProjectsNames("abc", "abc", "abc", "abc");
         await act.Should().ThrowExactlyAsync<HttpRequestException>();

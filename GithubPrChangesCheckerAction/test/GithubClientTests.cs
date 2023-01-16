@@ -71,7 +71,7 @@ public class GithubClientTests
                            });
 
 
-        var results = await _sut.GetChangedProjectsNames("abc", "abc", "abc", "abc");
+        var results = await _sut.GetChangedProjectsNames("owner", "name", "prNumber", "token");
         results.Should().BeEquivalentTo("MySingleProject");
     }
 
@@ -105,7 +105,7 @@ public class GithubClientTests
                                Content = new StringContent("[]")
                            });
 
-        var results = await _sut.GetChangedProjectsNames("abc", "abc", "abc", "abc");
+        var results = await _sut.GetChangedProjectsNames("owner", "name", "prNumber", "token");
         results.Should().BeEquivalentTo("MySingleProject", "AnotherProject");
     }
 
@@ -168,7 +168,7 @@ public class GithubClientTests
                                Content = new StringContent("[]")
                            });
 
-        var results = await _sut.GetChangedProjectsNames("abc", "abc", "abc", "abc");
+        var results = await _sut.GetChangedProjectsNames("owner", "name", "prNumber", "token");
         results.Should().BeEquivalentTo("MySingleProject_page1", "AnotherProject_page1", "MySingleProject_page2", "SomeOther", "AnotherProject_page2", "AnotherProject_page3", "SuperSecretProjects_page3");
     }
 
@@ -185,7 +185,7 @@ public class GithubClientTests
                                  StatusCode = HttpStatusCode.NotFound
                              });
 
-        Func<Task> act = async () => await _sut.GetChangedProjectsNames("abc", "abc", "abc", "abc");
+        Func<Task> act = async () => await _sut.GetChangedProjectsNames("owner", "name", "prNumber", "token");
         await act.Should().ThrowExactlyAsync<HttpRequestException>();
     }
 
